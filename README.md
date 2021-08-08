@@ -1,5 +1,5 @@
 # Тестовое задание для компании Wegotrip  
-Исользовал архитектуру Mvp.  
+Использовал архитектуру Mvp.  
 Для MVP использовал Moxy.    
 Single Activity  
 Создал api тут - https://npoint.io/  
