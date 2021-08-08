@@ -27,7 +27,7 @@ class ListStagesFragment : Fragment(), ListStagesAdapter.onItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(example.wegotrip.R.layout.fragment_list_stages, container, false)
+        return inflater.inflate(R.layout.fragment_list_stages, container, false)
     }
 
     @SuppressLint("ResourceAsColor")

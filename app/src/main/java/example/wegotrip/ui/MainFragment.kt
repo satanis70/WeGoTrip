@@ -41,7 +41,9 @@ class MainFragment : MvpAppCompatFragment(), MainView  {
     val listImageUri = ArrayList<Uri>()
     var numberStage : Int? = null
     var urlMusic = String()
+    lateinit var currentExcursion: Excursion
     lateinit var navController: NavController
+    lateinit var currentMediaPlayer: MediaPlayer
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,8 +71,9 @@ class MainFragment : MvpAppCompatFragment(), MainView  {
         }
         mainPagerAdapter = MainPagerAdapter(listImageUri)
         view_pager_image.adapter = mainPagerAdapter
-        textView_name_stage.text = excursions.excursion[0].stages[numberStage!!].nameStages
-        text_view_stage_text.text = excursions.excursion[0].stages[numberStage!!].text
+        currentExcursion = excursions.excursion[0]
+        textView_name_stage.text = currentExcursion.stages[numberStage!!].nameStages
+        text_view_stage_text.text = currentExcursion.stages[numberStage!!].text
         imageButton_dehaze.setOnClickListener {
             if (slide_up.panelState == SlidingUpPanelLayout.PanelState.EXPANDED){
                 slide_up.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
@@ -82,10 +85,7 @@ class MainFragment : MvpAppCompatFragment(), MainView  {
         }
 
 
-        imageButton_list_stages.setOnClickListener {
-            val action = MainFragmentDirections.actionMainFragmentToListStagesFragment(excursions.excursion[0])
-            navController.navigate(action)
-        }
+
     }
 
     override fun onDataErrorFromApi(message: String) {
@@ -94,10 +94,11 @@ class MainFragment : MvpAppCompatFragment(), MainView  {
     }
 
     override fun playMusic(mediaPlayer: MediaPlayer) {
-        mediaPlayer.setDataSource(urlMusic)
-        mediaPlayer.prepare()
+        currentMediaPlayer = mediaPlayer
+        currentMediaPlayer.setDataSource(urlMusic)
+        currentMediaPlayer.prepare()
         imageButton_play.setOnClickListener {
-            mediaPlayer.apply {
+            currentMediaPlayer.apply {
                 if (isPlaying){
                     pause()
                     imageButton_play.setImageDrawable(resources.getDrawable(R.drawable.play))
@@ -108,11 +109,18 @@ class MainFragment : MvpAppCompatFragment(), MainView  {
             }
         }
         imageButton_replay_back.setOnClickListener {
-            mediaPlayer.seekTo(mediaPlayer.currentPosition-5000)
+            mediaPlayer.seekTo(currentMediaPlayer.currentPosition-5000)
         }
         imageButton_flash_forward.setOnClickListener {
-            mediaPlayer.seekTo(mediaPlayer.currentPosition+5000)
+            mediaPlayer.seekTo(currentMediaPlayer.currentPosition+5000)
+        }
+
+        imageButton_list_stages.setOnClickListener {
+            val action = MainFragmentDirections.actionMainFragmentToListStagesFragment(currentExcursion)
+            navController.navigate(action)
         }
     }
+
+
 
 }

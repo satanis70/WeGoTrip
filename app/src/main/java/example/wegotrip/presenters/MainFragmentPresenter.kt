@@ -12,8 +12,7 @@ import moxy.presenterScope
 
 @InjectViewState
 class MainFragmentPresenter : MvpPresenter<MainView>() {
-
-    lateinit var excursions: Excursions
+    lateinit var mediaPlayer: MediaPlayer
     suspend fun requestApi(){
         presenterScope.launch {
             val retrofit = RetrofitService.create().getStages()
@@ -22,7 +21,7 @@ class MainFragmentPresenter : MvpPresenter<MainView>() {
                     viewState.onDataCompleteFromApi(it)
                 }
 
-                val mediaPlayer = MediaPlayer().apply {
+                mediaPlayer = MediaPlayer().apply {
                     setAudioAttributes(
                         AudioAttributes.Builder()
                             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -38,5 +37,8 @@ class MainFragmentPresenter : MvpPresenter<MainView>() {
         }
     }
 
-
+    override fun detachView(view: MainView?) {
+        super.detachView(view)
+        mediaPlayer.stop()
+    }
 }
