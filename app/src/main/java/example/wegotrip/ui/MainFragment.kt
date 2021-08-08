@@ -20,6 +20,7 @@ import example.wegotrip.Util.ListStagesAdapter
 import example.wegotrip.Util.MainPagerAdapter
 import example.wegotrip.models.Excursion
 import example.wegotrip.models.Excursions
+import example.wegotrip.models.Player
 import example.wegotrip.models.Stage
 import example.wegotrip.presenters.MainFragmentPresenter
 import example.wegotrip.view.MainView
@@ -84,8 +85,6 @@ class MainFragment : MvpAppCompatFragment(), MainView  {
             }
         }
 
-
-
     }
 
     override fun onDataErrorFromApi(message: String) {
@@ -93,8 +92,8 @@ class MainFragment : MvpAppCompatFragment(), MainView  {
         Toast.makeText(requireContext(), R.string.error_api, Toast.LENGTH_LONG).show()
     }
 
-    override fun playMusic(mediaPlayer: MediaPlayer) {
-        currentMediaPlayer = mediaPlayer
+    override fun playMusic(mediaPlayer: Player) {
+        currentMediaPlayer = mediaPlayer.mediaPlayer
         currentMediaPlayer.setDataSource(urlMusic)
         currentMediaPlayer.prepare()
         imageButton_play.setOnClickListener {
@@ -109,18 +108,16 @@ class MainFragment : MvpAppCompatFragment(), MainView  {
             }
         }
         imageButton_replay_back.setOnClickListener {
-            mediaPlayer.seekTo(currentMediaPlayer.currentPosition-5000)
+            currentMediaPlayer.seekTo(currentMediaPlayer.currentPosition-5000)
         }
         imageButton_flash_forward.setOnClickListener {
-            mediaPlayer.seekTo(currentMediaPlayer.currentPosition+5000)
+            currentMediaPlayer.seekTo(currentMediaPlayer.currentPosition+5000)
         }
 
         imageButton_list_stages.setOnClickListener {
-            val action = MainFragmentDirections.actionMainFragmentToListStagesFragment(currentExcursion)
+            val action = MainFragmentDirections.actionMainFragmentToListStagesFragment(currentExcursion, Player(currentMediaPlayer))
             navController.navigate(action)
         }
     }
-
-
 
 }

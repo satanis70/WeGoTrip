@@ -14,6 +14,7 @@ import example.wegotrip.models.Stage
 import kotlinx.android.synthetic.main.fragment_list_stages.*
 import androidx.recyclerview.widget.DividerItemDecoration
 import android.annotation.SuppressLint
+import android.media.MediaPlayer
 import example.wegotrip.R
 
 
@@ -23,6 +24,7 @@ class ListStagesFragment : Fragment(), ListStagesAdapter.onItemClickListener {
     private lateinit var listStagesAdapter: ListStagesAdapter
     val listStages = ArrayList<Stage>()
     lateinit var navController: NavController
+    private var currentMediaPlayer: MediaPlayer = MediaPlayer()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,7 +39,6 @@ class ListStagesFragment : Fragment(), ListStagesAdapter.onItemClickListener {
         for (i in args.listStages.stages){
             listStages.add(i)
         }
-
         listStagesAdapter = ListStagesAdapter(listStages, this)
         recycler_view_stages.layoutManager = LinearLayoutManager(requireContext())
         val itemDecoration =
@@ -45,10 +46,13 @@ class ListStagesFragment : Fragment(), ListStagesAdapter.onItemClickListener {
         itemDecoration.setDrawable(resources.getDrawable(R.drawable.divider))
         recycler_view_stages.addItemDecoration(itemDecoration)
         recycler_view_stages.adapter = listStagesAdapter
+        listStagesAdapter.notifyDataSetChanged()
+        currentMediaPlayer = args.player.mediaPlayer
     }
 
     override fun onItemClick(position: Int) {
         val action = ListStagesFragmentDirections.actionListStagesFragmentToMainFragment(position)
         navController.navigate(action)
+        currentMediaPlayer.stop()
     }
 }

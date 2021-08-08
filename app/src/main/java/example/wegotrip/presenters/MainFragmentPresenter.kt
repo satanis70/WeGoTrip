@@ -3,6 +3,7 @@ package example.wegotrip.presenters
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import example.wegotrip.models.Excursions
+import example.wegotrip.models.Player
 import example.wegotrip.services.RetrofitService
 import example.wegotrip.view.MainView
 import kotlinx.coroutines.launch
@@ -12,7 +13,7 @@ import moxy.presenterScope
 
 @InjectViewState
 class MainFragmentPresenter : MvpPresenter<MainView>() {
-    lateinit var mediaPlayer: MediaPlayer
+    lateinit var currentMediaPlayer: MediaPlayer
     suspend fun requestApi(){
         presenterScope.launch {
             val retrofit = RetrofitService.create().getStages()
@@ -21,7 +22,7 @@ class MainFragmentPresenter : MvpPresenter<MainView>() {
                     viewState.onDataCompleteFromApi(it)
                 }
 
-                mediaPlayer = MediaPlayer().apply {
+                currentMediaPlayer = MediaPlayer().apply {
                     setAudioAttributes(
                         AudioAttributes.Builder()
                             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -30,15 +31,10 @@ class MainFragmentPresenter : MvpPresenter<MainView>() {
                     )
                 }
 
-                viewState.playMusic(mediaPlayer)
+                viewState.playMusic(Player(currentMediaPlayer))
             } else {
                 viewState.onDataErrorFromApi(retrofit.message())
             }
         }
-    }
-
-    override fun detachView(view: MainView?) {
-        super.detachView(view)
-        mediaPlayer.stop()
     }
 }

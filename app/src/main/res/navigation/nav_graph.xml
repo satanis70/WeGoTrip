@@ -37,6 +37,10 @@
         <argument
             android:name="listStages"
             app:argType="example.wegotrip.models.Excursion" />
+        <argument
+            android:name="player"
+            app:argType="example.wegotrip.models.Player">
+        </argument>
     </fragment>
 
 </navigation>
